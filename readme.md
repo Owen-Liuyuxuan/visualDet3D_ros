@@ -8,6 +8,26 @@ All parameters are exposed in the launch file.
 
 **Notice**: This node only takes image and camera_info as input, the outputs are bounding boxes. 
 
+
+### Setup
+
+Install ROS, tested on Ubuntu 18.04, ROS melodic.
+
+Enable rospy in Python3 (this should not affect Python2), but it **does not** enable **tf** in Python3.
+```bash
+sudo apt-get install python3-catkin-pkg-modules
+sudo apt-get install python3-rospkg-modules
+```
+
+Clone this repo into a ROS workspace and run
+```bash
+catkin_make
+source devel/setup.bash
+```
+under the workspace folder.
+
+Also modify the launch file.
+
 ### Subscribed Topics
 
 image_raw ([sensor_msgs/Image](http://docs.ros.org/en/api/sensor_msgs/html/msg/Image.html))

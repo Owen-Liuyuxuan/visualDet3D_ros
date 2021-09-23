@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <launch>
-    <arg name="visual3d_path" default="/home/yxliu/IROS_try/visualDet3D_open"/>
-    <arg name="cfg_file" default="/home/yxliu/IROS_try/visualDet3D_open/config/kitti_yolo3d_copied.py"/>
-    <arg name="weight_path" default="/home/yxliu/IROS_try/visualDet3D_open/workdirs/Mono3D/checkpoint/GroundAwareYolo3D_latest.pth"/>
+    <arg name="visual3d_path" default="/home/visualDet3D_open"/>
+    <arg name="cfg_file" default="/home/visualDet3D_open/config/kitti_yolo3d_copied.py"/>
+    <arg name="weight_path" default="/home/visualDet3D_open/workdirs/Mono3D/checkpoint/GroundAwareYolo3D_latest.pth"/>
     <arg name="camera_topic" default="/kitti/left_camera/image"/>
     <arg name="camera_param" default="/kitti/left_camera/camera_info"/>
     <arg name="bbox_topic" default="/bboxes"/>
