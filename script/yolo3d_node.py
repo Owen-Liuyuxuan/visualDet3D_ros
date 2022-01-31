@@ -6,7 +6,7 @@ import torch.nn.functional as F
 
 import rospy
 from sensor_msgs.msg import Image, CameraInfo
-from ros_util import object_to_marker, clear_single_box
+from ros_util import object_to_marker, clear_single_box, clear_all_bbox
 from visualization_msgs.msg import MarkerArray
 
 
@@ -85,6 +85,7 @@ class Yolo3DNode:
         self.bbox_publish        = rospy.Publisher("/bboxes", MarkerArray, queue_size=1, latch=True)
         rospy.Subscriber("/image_raw", Image, self.camera_callback, buff_size=2**26, queue_size=1)
         rospy.Subscriber("/camera_info", CameraInfo, self.camera_info_callback)
+        clear_all_bbox(self.bbox_publish)
 
     def _predict(self, image):
         transformed_image, transformed_P2 = self.transform(image.copy(), p2=self.P.copy())
@@ -139,7 +140,7 @@ class Yolo3DNode:
             image = np.frombuffer(msg.data, dtype=np.uint8).reshape([height, width, 3]) #[BGR]
             objects = self._predict(image[:, :, ::-1].copy()) # BGR -> RGB
             # clear_all_bbox(self.bbox_publish)
-            self.bbox_publish.publish([object_to_marker(obj, marker_id=i, duration=0, frame_id=self.frame_id) for i, obj in enumerate(objects)])
+            self.bbox_publish.publish([object_to_marker(obj, marker_id=i, duration=10, frame_id=self.frame_id) for i, obj in enumerate(objects)])
 
         N0 = len(objects)
         if N0 < self.num_objects:
