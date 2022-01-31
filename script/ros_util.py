@@ -231,3 +231,13 @@ def clear_all_bbox(marker_publisher):
         return
     if marker_publisher.data_class is MarkerArray:
         marker_publisher.publish([clear_marker])
+
+def clear_single_box(marker_publisher, marker_id):
+    clear_marker = Marker()
+    clear_marker.action = 2
+    clear_marker.id = marker_id
+    if marker_publisher.data_class is Marker:
+        marker_publisher.publish(clear_marker)
+        return
+    if marker_publisher.data_class is MarkerArray:
+        marker_publisher.publish([clear_marker])
