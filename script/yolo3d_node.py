@@ -5,9 +5,9 @@ import torch
 import torch.nn.functional as F
 
 import rospy
-from sensor_msgs.msg import Image, CameraInfo, PointCloud2
-from ros_util import object_to_marker, clear_all_bbox
-from visualization_msgs.msg import Marker, MarkerArray
+from sensor_msgs.msg import Image, CameraInfo
+from ros_util import object_to_marker, clear_single_box, clear_all_bbox
+from visualization_msgs.msg import MarkerArray
 
 
 def collate_fn(batch):
@@ -79,11 +79,13 @@ class Yolo3DNode:
     def _init_static_memory(self):
         self.frame_id = None
         self.P = None
+        self.num_objects = 0
 
     def _init_topics(self):
         self.bbox_publish        = rospy.Publisher("/bboxes", MarkerArray, queue_size=1, latch=True)
-        rospy.Subscriber("/image_raw", Image, self.camera_callback, buff_size=2**24, queue_size=1)
+        rospy.Subscriber("/image_raw", Image, self.camera_callback, buff_size=2**26, queue_size=1)
         rospy.Subscriber("/camera_info", CameraInfo, self.camera_info_callback)
+        clear_all_bbox(self.bbox_publish)
 
     def _predict(self, image):
         transformed_image, transformed_P2 = self.transform(image.copy(), p2=self.P.copy())
@@ -138,10 +140,14 @@ class Yolo3DNode:
             image = np.frombuffer(msg.data, dtype=np.uint8).reshape([height, width, 3]) #[BGR]
             objects = self._predict(image[:, :, ::-1].copy()) # BGR -> RGB
             # clear_all_bbox(self.bbox_publish)
-            self.bbox_publish.publish([object_to_marker(obj, marker_id=i, duration=1, frame_id=self.frame_id) for i, obj in enumerate(objects)])
+            self.bbox_publish.publish([object_to_marker(obj, marker_id=i, duration=10, frame_id=self.frame_id) for i, obj in enumerate(objects)])
 
+        N0 = len(objects)
+        if N0 < self.num_objects:
+            for i in range(N0, self.num_objects):
+                clear_single_box(self.bbox_publish, marker_id=i)
+        self.num_objects = N0
 
-    
     def camera_info_callback(self, msg):
         self.P = np.zeros((3, 4))
         self.P[0:3, 0:3] = np.array(msg.K).reshape((3, 3))

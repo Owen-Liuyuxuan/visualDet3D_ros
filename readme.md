@@ -1,6 +1,8 @@
 ## YOLO3D ROS Node
 
-This repo contains a Monocular 3D detection Ros node. Base on https://github.com/Owen-Liuyuxuan/visualDet3D
+This repo contains a Monocular 3D detection Ros node. Base on https://github.com/Owen-Liuyuxuan/visualDet3D.
+
+We have also provided a [cookbook](https://owen-liuyuxuan.github.io/papers_reading_sharing.github.io/3dDetection/my_cookbook/#synthetic-cookbook-for-usingtestingdemonstrating-visualdet3d-in-ros) on how to utilize the open-source tool chains. 
 
 All parameters are exposed in the launch file.
 
