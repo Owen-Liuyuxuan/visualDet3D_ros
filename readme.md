@@ -2,6 +2,8 @@
 
 This repo contains a Monocular 3D detection Ros node. Base on https://github.com/Owen-Liuyuxuan/visualDet3D.
 
+**Update (2023-10-2)**: This repo now also supports inference from [FSNet/VisionFactory](https://github.com/Owen-Liuyuxuan/visionfactory). Use the ```mono3d_node.py``` and the ```mono3d.launch``` instead. Existing models from visualDet3D are still well-supported by ```yolo3d_node.py/yolo3d.launch```
+
 We have also provided a [cookbook](https://owen-liuyuxuan.github.io/papers_reading_sharing.github.io/3dDetection/my_cookbook/#synthetic-cookbook-for-usingtestingdemonstrating-visualdet3d-in-ros) on how to utilize the open-source tool chains. 
 
 All parameters are exposed in the launch file.

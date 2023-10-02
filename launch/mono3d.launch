@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="visual3d_path" default="/home/yliuhb/vision_collection/src/learning/vision_factory"/>
+    <arg name="cfg_file" default="/home/yliuhb/vision_collection/model/det3d/monoflex_cfg.py"/>
+    <arg name="weight_path" default="/home/yliuhb/vision_collection/model/det3d/monoflex_2d_center.pth"/>
+    <arg name="camera_topic" default="/kitti360/left_camera/image"/>
+    <!-- <arg name="camera_topic" default="/nuscenes/CAM_BACK/image"/> -->
+    <arg name="camera_param" default="/kitti360/left_camera/camera_info"/>
+    <!-- <arg name="camera_param" default="/nuscenes/CAM_BACK/camera_info"/> -->
+    <arg name="bbox_topic" default="/bboxes"/>
+    <arg name="INFERENCE_W" default="1280"/>
+    <arg name="INFERENCE_H" default="384"/>
+
+    <node pkg="yolo3d" type="mono3d_node.py" name="yolo3d_node" output="screen">
+        <param name="VISUAL3D_PATH" value="$(arg visual3d_path)"/>
+        <param name="CFG_FILE" value="$(arg cfg_file)"/>
+        <param name="WEIGHT_PATH" value="$(arg weight_path)"/>
+        <!-- <param name="CROP_TOP" value="$(arg CROP_TOP)"/> -->
+        <!-- <param name="INFERENCE_SCALE" value="$(arg INFERENCE_SCALE)"/> -->
+        <param name="INFERENCE_W" value="$(arg INFERENCE_W)"/>
+        <param name="INFERENCE_H" value="$(arg INFERENCE_H)"/>
+        <remap from="/image_raw" to="$(arg camera_topic)"/>
+        <remap from="/camera_info" to="$(arg camera_param)"/>
+        <remap from="/bboxes" to="$(arg bbox_topic)"/>
+    </node>
+
+</launch>

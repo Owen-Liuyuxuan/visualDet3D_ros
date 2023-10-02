@@ -10,7 +10,7 @@ from cv_bridge import CvBridge
 import cv2
 import std_msgs.msg as std_msgs
 import sensor_msgs.msg as sensor_msgs
-from constants import KITTI_NAMES, KITTI_COLORS
+from constants import KITTI_NAMES, KITTI_COLORS, MONO3D_NAMES, COLOR_MAPPINGS
 
 def depth_image_to_point_cloud_array(depth_image, K, rgb_image=None):
     """  convert depth image into color pointclouds [xyzbgr]
@@ -107,7 +107,7 @@ def line_points_from_3d_bbox(x, y, z, w, h, l, theta):
 
     return points
 
-def object_to_marker(obj, frame_id="base", marker_id=None, duration=0.15, color=None):
+def object_to_marker(obj, frame_id="base", marker_id=None, duration=0.15, color=None, use_nusc_color_map=False):
     """ Transform an object to a marker.
 
     Args:
@@ -133,13 +133,16 @@ def object_to_marker(obj, frame_id="base", marker_id=None, duration=0.15, color=
     if marker_id is not None:
         marker.id = marker_id
     marker.type = 5
-    marker.scale.x = 0.05
+    marker.scale.x = 0.3
 
-    object_cls_index = KITTI_NAMES.index(obj["type_name"])
-    if color is None:
-        obj_color = KITTI_COLORS[object_cls_index] #[r, g, b]
+    if use_nusc_color_map:
+        obj_color = COLOR_MAPPINGS[obj['type_name']]
     else:
-        obj_color = color
+        object_cls_index = KITTI_NAMES.index(obj["type_name"])
+        if color is None:
+            obj_color = KITTI_COLORS[object_cls_index] #[r, g, b]
+        else:
+            obj_color = color
     marker.color.r = obj_color[0] / 255.0
     marker.color.g = obj_color[1] / 255.0
     marker.color.b = obj_color[2] / 255.0
